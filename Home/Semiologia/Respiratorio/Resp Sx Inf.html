@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Síndromes Infecciosos — Quiz</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background: #f6f7f9; color: #111; }
+    header { padding: 18px 16px; background: #111; color: #fff; }
+    header h1 { margin: 0; font-size: 18px; font-weight: 650; }
+    header p { margin: 6px 0 0; opacity: .85; font-size: 13px; }
+
+    main { max-width: 1400px; margin: 0 auto; padding: 16px; }
+    .card { background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.06); }
+    .row { display: grid; grid-template-columns: 1.1fr .9fr; gap: 14px; align-items: start; }
+    @media (max-width: 860px) { .row { grid-template-columns: 1fr; } }
+
+    #quizRow.matchingMode {
+      grid-template-columns: 1fr;
+    }
+
+    #quizRow.matchingMode #leftPane {
+      display: none;
+    }
+
+    #quizRow.matchingMode #rightPane {
+      width: 100%;
+    }
+
+    .imgWrap, .caseWrap {
+      background: #fafafa;
+      border: 1px solid #e8eaee;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    img { width: 100%; height: auto; border-radius: 10px; display: block; }
+
+    #qImgs {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    #qImgs.twoImages {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #qImgs img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .caseLabel {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-bottom: 8px;
+    }
+
+    .caseText {
+      white-space: pre-wrap;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .meta { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 0; }
+    .pill { font-size: 12px; background: #eef2ff; padding: 6px 10px; border-radius: 999px; border: 1px solid #e1e6ff; }
+    .pill b { margin-right: 6px; }
+
+    .qTitle { font-weight: 700; margin: 0 0 10px; line-height: 1.4; }
+    .choices { display: grid; gap: 8px; }
+
+    button.choice {
+      text-align: left;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #e3e6ec;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button.choice:hover { border-color: #cbd2df; background: #fbfcff; }
+    button.choice[disabled] { cursor: not-allowed; opacity: .92; }
+    button.correct { border-color: #16a34a; background: #ecfdf3; }
+    button.wrong { border-color: #dc2626; background: #fef2f2; }
+
+    .feedback {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #e9edf3;
+      background: #fbfbfc;
+      font-size: 14px;
+    }
+    .feedback.ok { border-color: #16a34a33; background: #ecfdf3; }
+    .feedback.no { border-color: #dc262633; background: #fef2f2; }
+    .explain { margin-top: 6px; font-size: 13px; opacity: .9; line-height: 1.4; }
+
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .btn {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #d8dde6;
+      background: #111;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn.secondary { background: #fff; color: #111; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .small { font-size: 12px; opacity: .75; margin-top: 8px; }
+    a { color: inherit; }
+
+    .semiologyWrap {
+      display: none;
+      margin-top: 12px;
+      margin-bottom: 12px;
+      background: #fafafa;
+      border: 1px solid #e8eaee;
+      border-radius: 12px;
+      padding: 10px;
+      overflow-x: auto;
+    }
+
+    .semiologyTable {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    .semiologyTable th,
+    .semiologyTable td {
+      border: 1px solid #ffffff;
+      padding: 10px 8px;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+
+    .semiologyTitle {
+      background: #1696c8;
+      color: #fff;
+      text-align: left;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .semiologyColHead {
+      background: #b9d7ea;
+      font-style: italic;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .semiologySection {
+      background: #d9eaf4;
+      font-weight: 700;
+      width: 180px;
+    }
+
+    .semiologySubrow {
+      display: block;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+
+    .semiologyCell {
+      background: #d9eaf4;
+    }
+
+    .semiologyBlank {
+      background: #b9d7ea;
+    }
+
+    #matchQuestionWrap {
+      width: 100%;
+    }
+
+    .matchBankWrap {
+      background: #fafafa;
+      border: 1px solid #e8eaee;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 12px;
+      margin-bottom: 14px;
+    }
+
+    .matchBank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 48px;
+      align-items: flex-start;
+    }
+
+    .draggableItem {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d9deea;
+      background: #fff;
+      cursor: grab;
+      font-size: 12px;
+      line-height: 1.25;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .draggableItem:active {
+      cursor: grabbing;
+    }
+
+    .matchGrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .matchGrid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .syndromeCard {
+      background: #fafafa;
+      border: 1px solid #e8eaee;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .syndromeTitle {
+      background: #1696c8;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+
+    .dropRow {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: stretch;
+    }
+
+    .dropLabel {
+      background: #d9eaf4;
+      border-radius: 10px;
+      padding: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .dropLabel span {
+      display: block;
+      font-weight: 400;
+      margin-top: 3px;
+      font-size: 11px;
+    }
+
+    .dropZone {
+      min-height: 50px;
+      background: #eef4f8;
+      border: 2px dashed #c8d4df;
+      border-radius: 10px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-wrap: anywhere;
+    }
+
+    .dropZone.filled {
+      border-style: solid;
+      background: #fff;
+    }
+
+    .dropZone.correct {
+      border-color: #16a34a;
+      background: #ecfdf3;
+    }
+
+    .dropZone.wrong {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Síndromes Infecciosos — Quiz</h1>
+    <p>Elija la opción correcta.</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="row" id="quizRow">
+        <div id="leftPane">
+          <div id="imgWrap" class="imgWrap">
+            <div id="qImgs"></div>
+            <div class="meta">
+              <div class="pill"><b>Pregunta:</b><span id="qNum"></span>/<span id="qTotal"></span></div>
+              <div class="pill"><b>Puntaje:</b><span id="score"></span></div>
+              <div class="pill"><b>Racha:</b><span id="streak"></span></div>
+              <div class="pill" id="partPill" style="display:none;"><b>Caso:</b><span id="partNum"></span>/<span id="partTotal"></span></div>
+            </div>
+          </div>
+
+          <div id="imgTip" class="small">
+            Si la imagen no carga, ábrala en una pestaña nueva:
+            <a id="openImg" target="_blank" rel="noopener">Abrir imagen</a>
+          </div>
+
+          <div id="caseWrap" class="caseWrap" style="display:none; margin-top: 12px;">
+            <div class="caseLabel">Caso clínico</div>
+            <div id="caseText" class="caseText"></div>
+          </div>
+        </div>
+
+        <div id="rightPane">
+          <p class="qTitle" id="qPrompt"></p>
+
+          <div id="questionHintControls" class="controls" style="display:none; margin-top:0; margin-bottom:12px;">
+            <button class="btn secondary" id="questionHintBtn" type="button">Pista</button>
+          </div>
+
+          <div id="questionHintWrap" class="semiologyWrap" style="display:none;">
+            <table class="semiologyTable">
+              <tr>
+                <th colspan="4" class="semiologyTitle">
+                  CUADRO 42-2-1. Diferencias semiológicas de los tres grandes síndromes respiratorios
+                </th>
+              </tr>
+              <tr>
+                <th class="semiologyBlank"></th>
+                <th class="semiologyColHead">Condensación con luz bronquial permeable (neumonía)</th>
+                <th class="semiologyColHead">Condensación con luz bronquial obstruida (atelectasia por obstrucción)</th>
+                <th class="semiologyColHead">Derrame pleural</th>
+              </tr>
+              <tr>
+                <td class="semiologySection">
+                  Inspección
+                  <span class="semiologySubrow">Patrón ventilatorio</span>
+                </td>
+                <td class="semiologyCell">Patrón restrictivo: taquipnea con hipopnea</td>
+                <td class="semiologyCell">Patrón restrictivo: taquipnea con hipopnea</td>
+                <td class="semiologyCell">Patrón restrictivo: taquipnea con hipopnea</td>
+              </tr>
+              <tr>
+                <td class="semiologySection">
+                  Palpación
+                  <span class="semiologySubrow">Vibraciones vocales</span>
+                </td>
+                <td class="semiologyCell">Aumentadas</td>
+                <td class="semiologyCell">Abolidas</td>
+                <td class="semiologyCell">Disminuidas o abolidas</td>
+              </tr>
+              <tr>
+                <td class="semiologySection">
+                  Percusión
+                  <span class="semiologySubrow">Pulmonar</span>
+                  <span class="semiologySubrow">De la columna</span>
+                </td>
+                <td class="semiologyCell">Mate<br>Sonora</td>
+                <td class="semiologyCell">Mate<br>Sonora</td>
+                <td class="semiologyCell">Mate<br>Mate</td>
+              </tr>
+              <tr>
+                <td class="semiologySection">Auscultación</td>
+                <td class="semiologyCell">Estertores crepitantes y soplo tubario o brónquico según la etapa</td>
+                <td class="semiologyCell">Silencio respiratorio</td>
+                <td class="semiologyCell">Abolición del murmullo vesicular<br>Soplo en “E” en el límite superior del derrame</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div id="matchQuestionWrap" style="display:none;">
+            <div class="controls" style="margin-top:0; margin-bottom:12px;">
+              <button class="btn secondary" id="checkMatchBtn" type="button">Verificar correlación</button>
+              <button class="btn secondary" id="resetMatchBtn" type="button">Reiniciar correlación</button>
+            </div>
+
+            <div class="matchBankWrap">
+              <div class="caseLabel">Hallazgos para arrastrar</div>
+              <div id="matchBank" class="matchBank"></div>
+            </div>
+
+            <div id="matchGrid" class="matchGrid">
+              <div class="syndromeCard">
+                <div class="syndromeTitle">Condensación con luz bronquial permeable (neumonía)</div>
+
+                <div class="dropRow">
+                  <div class="dropLabel">Inspección<br><span>Patrón ventilatorio</span></div>
+                  <div class="dropZone" data-syndrome="neumonia" data-slot="inspeccion"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Palpación<br><span>Vibraciones vocales</span></div>
+                  <div class="dropZone" data-syndrome="neumonia" data-slot="palpacion"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Percusión<br><span>Pulmonar</span></div>
+                  <div class="dropZone" data-syndrome="neumonia" data-slot="percusion_pulmonar"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Percusión<br><span>De la columna</span></div>
+                  <div class="dropZone" data-syndrome="neumonia" data-slot="percusion_columna"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Auscultación</div>
+                  <div class="dropZone" data-syndrome="neumonia" data-slot="auscultacion"></div>
+                </div>
+              </div>
+
+              <div class="syndromeCard">
+                <div class="syndromeTitle">Condensación con luz bronquial obstruida (atelectasia por obstrucción)</div>
+
+                <div class="dropRow">
+                  <div class="dropLabel">Inspección<br><span>Patrón ventilatorio</span></div>
+                  <div class="dropZone" data-syndrome="atelectasia" data-slot="inspeccion"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Palpación<br><span>Vibraciones vocales</span></div>
+                  <div class="dropZone" data-syndrome="atelectasia" data-slot="palpacion"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Percusión<br><span>Pulmonar</span></div>
+                  <div class="dropZone" data-syndrome="atelectasia" data-slot="percusion_pulmonar"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Percusión<br><span>De la columna</span></div>
+                  <div class="dropZone" data-syndrome="atelectasia" data-slot="percusion_columna"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Auscultación</div>
+                  <div class="dropZone" data-syndrome="atelectasia" data-slot="auscultacion"></div>
+                </div>
+              </div>
+
+              <div class="syndromeCard">
+                <div class="syndromeTitle">Derrame pleural</div>
+
+                <div class="dropRow">
+                  <div class="dropLabel">Inspección<br><span>Patrón ventilatorio</span></div>
+                  <div class="dropZone" data-syndrome="derrame" data-slot="inspeccion"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Palpación<br><span>Vibraciones vocales</span></div>
+                  <div class="dropZone" data-syndrome="derrame" data-slot="palpacion"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Percusión<br><span>Pulmonar</span></div>
+                  <div class="dropZone" data-syndrome="derrame" data-slot="percusion_pulmonar"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Percusión<br><span>De la columna</span></div>
+                  <div class="dropZone" data-syndrome="derrame" data-slot="percusion_columna"></div>
+                </div>
+                <div class="dropRow">
+                  <div class="dropLabel">Auscultación</div>
+                  <div class="dropZone" data-syndrome="derrame" data-slot="auscultacion"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="feedback" class="feedback" style="display:none;"></div>
+
+          <div class="controls">
+            <button class="btn secondary" id="prevBtn">◀ Anterior</button>
+            <button class="btn" id="nextBtn">Siguiente ▶</button>
+            <button class="btn secondary" id="shuffleBtn">Mezclar quiz</button>
+            <button class="btn secondary" id="resetBtn">Reiniciar puntaje</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const BANK = [
+      {
+        id: "Síndrome de condensación",
+        img: "images/Fig. 42-2-1.png",
+        alt: "Imágenes de síndrome de condensación",
+        prompt: "Identifica el signo radiográfico característico del síndrome de condensación pulmonar.",
+        options: ["Broncograma aéreo", "Signo de la silueta", "Signo del menisco pleural", "Pérdida de volumen con desplazamiento de cisuras"],
+        answer: "Broncograma aéreo",
+        why: "La ocupación del espacio aéreo distal se visualiza como un infiltrado homogéneo que se interrumpe por líneas oscuras en su interior, correspondientes a estructuras bronquiales aireadas."
+      },
+      {
+        id: "Neumonía Atípica",
+        img: "images/Fig. 42-2-2.png",
+        alt: "Neumonía atípica",
+        prompt: "Identifica el signo radiográfico característico de la neumonía atípica.",
+        options: ["Consolidación lobar", "Patrón reticular", "Vidrio esmerilado", "Derrame pleural"],
+        answer: "Vidrio esmerilado",
+        why: "Opacidades en vidrio esmerilado de distribución subpleural tanto en los lóbulos superiores como en los inferiores. Estos hallazgos sugieren un proceso infeccioso viral característico de la enfermedad COVID-19 leve a moderada."
+      },
+      {
+        id: "Neumonía Atípica Severa",
+        img: "images/Fig. 42-2-3.png",
+        alt: "Neumonía atípica severa",
+        prompt: "Identifica el signo radiográfico característico de la neumonía atípica.",
+        options: ["Consolidación lobar", "Patrón reticular", "Vidrio esmerilado", "Derrame pleural"],
+        answer: "Vidrio esmerilado",
+        why: "Aumento de la densidad en vidrio esmerilado de distribución subpleural bilateral, con predominio de afectación en ambos lóbulos inferiores, donde se observa tendencia a la consolidación. Los hallazgos sugieren en primer término un proceso infeccioso de origen viral con compromiso pulmonar severo."
+      },
+      {
+        id: "Atelectasia",
+        img: "images/Fig. 42-2-4.png",
+        alt: "Atelectasia pasiva",
+        prompt: "¿Qué tipo de atelectasia es?",
+        options: ["Atelectasia pasiva", "Atelectasia obstructiva", "Atelectasia cicatrizal", "Atelectasia adhesiva"],
+        answer: "Atelectasia pasiva",
+        why: "Tomografía computarizada de tórax en ventana mediastínica. La flecha blanca señala un derrame pleural. La flecha negra señala atelectasia pasiva del parénquima pulmonar adyacente al derrame."
+      },
+      {
+        id: "Tumores Pulmonares",
+        img: "images/Fig. 42-2-5.png",
+        alt: "Metástasis pulmonares",
+        prompt: "¿Qué patrón radiológico identifica y con qué tipo de cáncer se asocia?",
+        options: ["Nódulo pulmonar solitario", "Linfangitis carcinomatosa", "Metástasis pulmonares", "Tumor de Pancoast"],
+        answer: "Metástasis pulmonares",
+        why: "Radiografía de tórax de frente con imágenes nodulares en \"suelta de globos\", secundarias a metástasis de adenocarcinoma gástrico en una mujer de 57 años."
+      },
+      {
+        id: "SDRA COVID-19",
+        case: "Douglas, de 30 años y obeso, es de nacionalidad venezolana y vive en la Argentina desde hace 3 años con su esposa y tres hijos en un departamento de dos ambientes. Tiene estudios universitarios completos (periodista), pero trabaja como taxista. Comenzó su enfermedad actual el 15 de marzo de 2020 con un síndrome febril con hipertermia de 39 °C y tos seca. A las 48 horas agregó mialgias intensas y a los 5 días del inicio de los síntomas dificultad respiratoria, por lo que consultó en un servicio de urgencias. En el examen físico se encontraba febril, taquicárdico, taquipneico y con una saturación del 84% en la oximetría de pulso. Se auscultaban crepitantes bibasales aislados. La radiografía de tórax mostró infiltrados pulmonares bilaterales de los vértices a las bases. Se solicitaron gases en sangre arterial respirando aire ambiente: pH 7,48; PCO2 27 mmHg; PO2 54 mmHg; HCO3 24 mEq/L; saturación de O2 85%.",
+        questions: [
+          {
+            prompt: "¿Cuál es el diagnóstico presuntivo?",
+            options: ["SDRA", "Neumonía bacteriana típica", "Tromboembolismo pulmonar", "Tuberculosis pulmonar"],
+            answer: "SDRA",
+            why: "Se trata de un paciente joven obeso con fiebre, tos seca, mialgias, dificultad respiratoria, hipoxemia e infiltrados pulmonares bilaterales. El diagnóstico sindrómico presuntivo es síndrome de distrés respiratorio agudo."
+          },
+          {
+            prompt: "¿Cómo lo confirmaría?",
+            options: ["Gasometría arterial", "Hemocultivos", "Angiotomografía de tórax", "Baciloscopía seriada de esputo"],
+            answer: "Gasometría arterial",
+            why: "La gasometría arterial permite definir insuficiencia respiratoria y valorar la gravedad del compromiso respiratorio."
+          }
+        ]
+      },
+      {
+        id: "Atelectasia masiva por tapón mucoso",
+        case: "Vitalis, de 50 años, se encuentra internado en la sala de clínica médica por una neumonía aspirativa. Al cuarto día de internación presenta dificultad respiratoria. En el examen físico se constata FC 130 lat/min, TA 110/80 mmHg, FR 36/min, temperatura axilar 37 °C y SaO2 76% con fracción inspirada de oxígeno del 24%. El examen del aparato respiratorio revela utilización de los músculos accesorios y, en el hemitórax derecho, menor expansión y ausencia del murmullo vesicular. En dicha región, las vibraciones vocales están abolidas y la percusión es mate con columna sonora.",
+        questions: [
+          {
+            prompt: "¿Cuál es su diagnóstico presuntivo?",
+            options: [
+              "Atelectasia masiva derecha",
+              "Derrame pleural derecho",
+              "Neumotórax derecho",
+              "Edema agudo de pulmón"
+            ],
+            answer: "Atelectasia masiva derecha",
+            why: "Los hallazgos del examen físico sugieren fuertemente un síndrome de condensación secundario a una atelectasia masiva."
+          },
+          {
+            prompt: "¿Qué datos son de valor para el diagnóstico diferencial?",
+            options: [
+              "En el derrame pleural la percusión de la columna es mate, se encuentra el signo del desnivel y se puede auscultar un soplo pleurítico",
+              "La fiebre, la taquicardia y la hipoxemia",
+              "La presencia de tiraje y uso de músculos accesorios",
+              "La neumonía aspirativa previa y la internación prolongada"
+            ],
+            answer: "En el derrame pleural la percusión de la columna es mate, se encuentra el signo del desnivel y se puede auscultar un soplo pleurítico",
+            why: "Esos datos ayudan a diferenciar atelectasia de derrame pleural."
+          },
+          {
+            prompt: "¿Cómo lo confirmaría?",
+            options: [
+              "Radiografía de tórax de frente",
+              "Gasometría arterial",
+              "Ecografía pleural",
+              "Tomografía computada con contraste"
+            ],
+            answer: "Radiografía de tórax de frente",
+            why: "La radiografía de tórax de frente mostró una opacidad completa del hemitórax derecho con desplazamiento de las estructuras mediastínicas en forma homolateral, lo que confirmó el diagnóstico de atelectasia."
+          }
+        ]
+      },
+      {
+        id: "Semiología comparativa de síndromes respiratorios",
+        type: "matching",
+        prompt: "Arrastre cada hallazgo al síndrome respiratorio correspondiente.",
+        matchItems: [
+          { id: "m1", text: "Patrón restrictivo: taquipnea con hipopnea", syndrome: "neumonia", slot: "inspeccion" },
+          { id: "m2", text: "Patrón restrictivo: taquipnea con hipopnea", syndrome: "atelectasia", slot: "inspeccion" },
+          { id: "m3", text: "Patrón restrictivo: taquipnea con hipopnea", syndrome: "derrame", slot: "inspeccion" },
+
+          { id: "m4", text: "Aumentadas", syndrome: "neumonia", slot: "palpacion" },
+          { id: "m5", text: "Abolidas", syndrome: "atelectasia", slot: "palpacion" },
+          { id: "m6", text: "Disminuidas o abolidas", syndrome: "derrame", slot: "palpacion" },
+
+          { id: "m7", text: "Mate", syndrome: "neumonia", slot: "percusion_pulmonar" },
+          { id: "m8", text: "Mate", syndrome: "atelectasia", slot: "percusion_pulmonar" },
+          { id: "m9", text: "Mate", syndrome: "derrame", slot: "percusion_pulmonar" },
+
+          { id: "m10", text: "Sonora", syndrome: "neumonia", slot: "percusion_columna" },
+          { id: "m11", text: "Sonora", syndrome: "atelectasia", slot: "percusion_columna" },
+          { id: "m12", text: "Mate", syndrome: "derrame", slot: "percusion_columna" },
+
+          { id: "m13", text: "Estertores crepitantes y soplo tubario o brónquico según la etapa", syndrome: "neumonia", slot: "auscultacion" },
+          { id: "m14", text: "Silencio respiratorio", syndrome: "atelectasia", slot: "auscultacion" },
+          { id: "m15", text: "Abolición del murmullo vesicular / Soplo en “E” en el límite superior del derrame", syndrome: "derrame", slot: "auscultacion" }
+        ],
+        why: "La condensación con bronquio permeable aumenta las vibraciones vocales y puede dar soplo tubario; la atelectasia obstructiva abole vibraciones vocales y murmullo vesicular; el derrame pleural disminuye o abole vibraciones vocales y muestra matidez pulmonar y también en la columna."
+      },
+      {
+        id: "Etapas evolutivas",
+        imgs: [
+          "images/Vidrio Esmerilado.png",
+          "images/Panal de Abejas.png"
+        ],
+        alt: "Patrón en vidrio esmerilado y panal de abejas",
+        prompt: "¿Cuál es el orden correcto de las etapas evolutivas en el síndrome intersticial?",
+        options: [
+          "Agente causal o estímulo inductor → Inflamación (alveolitis) → Lesión epitelial-endotelial → Fibrosis (reparación cicatrizal) → Colapso alveolar",
+          "Agente causal o estímulo inductor → Inflamación (alveolitis) → Lesión epitelial-endotelial → Colapso alveolar → Fibrosis (reparación cicatrizal)",
+          "Agente causal o estímulo inductor → Lesión epitelial-endotelial → Inflamación (alveolitis) → Fibrosis (reparación cicatrizal) → Colapso alveolar",
+          "Agente causal o estímulo inductor → Inflamación (alveolitis) → Fibrosis (reparación cicatrizal) → Lesión epitelial-endotelial → Colapso alveolar"
+        ],
+        answer: "Agente causal o estímulo inductor → Inflamación (alveolitis) → Lesión epitelial-endotelial → Fibrosis (reparación cicatrizal) → Colapso alveolar",
+        why: "El orden correcto de las etapas evolutivas es: agente causal o estímulo inductor, inflamación (alveolitis), lesión epitelial-endotelial, fibrosis (reparación cicatrizal) y colapso alveolar."
+      }
+      ,
+      {
+        id: "Definición de síndrome de condensación",
+        prompt: "¿Cuál es la definición de síndrome de condensación?",
+        options: [
+          "Compromiso del espacio aéreo por ocupación alveolar",
+          "Disminución del volumen pulmonar total o parcial por pérdida del aire",
+          "Acumulación de líquido en el espacio pleural con colapso pulmonar secundario",
+          "Engrosamiento intersticial difuso con destrucción de la arquitectura alveolar"
+        ],
+        answer: "Compromiso del espacio aéreo por ocupación alveolar",
+        why: "Transformación del parénquima pulmonar en una contextura densa y compacta, privada total o parcialmente de su contenido gaseoso (ocupación alveolar). Sus principales causas son la neumonía, la atelectasia, los tumores y el infarto de pulmón."
+      },
+      {
+        id: "Definición de neumonía",
+        prompt: "¿Cuál es la definición de neumonía?",
+        options: [
+          "Inflamación del parénquima pulmonar (exudado alveolar) debida a la llegada de un microorganismo",
+          "Compromiso del intersticio pulmonar por reacción fibroinflamatoria estéril",
+          "Obstrucción bronquial con atrapamiento aéreo distal y destrucción alveolar",
+          "Disminución del volumen pulmonar por compresión pleural del parénquima"
+        ],
+        answer: "Inflamación del parénquima pulmonar (exudado alveolar) debida a la llegada de un microorganismo",
+        why: ""
+      },
+      {
+        id: "Expresión clínica de neumonía",
+        prompt: "¿Cómo se expresa la manifestación clínica de la neumonía?",
+        options: [
+          "Fiebre y tos, con expectoración o no, asociadas a un infiltrado nuevo en la radiografía de tórax o en la tomografía computarizada",
+          "Tos seca crónica, pérdida de peso y hemoptisis, asociadas a cavitación apical en la radiografía de tórax",
+          "Disnea súbita, dolor pleurítico e hipersonoridad, asociadas a hiperclaridad unilateral en la radiografía de tórax",
+          "Sibilancias episódicas, opresión torácica y tos nocturna, con radiografía de tórax normal"
+        ],
+        answer: "Fiebre y tos, con expectoración o no, asociadas a un infiltrado nuevo en la radiografía de tórax o en la tomografía computarizada",
+        why: ""
+      },
+      {
+        id: "Manifestaciones clínicas de neumonía típica",
+        prompt: "¿Cómo se expresan las manifestaciones clínicas de la neumonía típica?",
+        options: [
+          "Fiebre, dolor torácico de tipo puntada de costado y tos con expectoración herrumbrosa",
+          "Disnea y tos seca, fiebre escasa, cefalea, vómitos, diarrea y mialgias",
+          "Tos crónica, sudoración nocturna, hemoptisis y adelgazamiento progresivo",
+          "Dolor torácico opresivo, ortopnea, edema periférico y crepitantes bibasales"
+        ],
+        answer: "Fiebre, dolor torácico de tipo puntada de costado y tos con expectoración herrumbrosa",
+        why: ""
+      },
+      {
+        id: "Fascies neumónica",
+        prompt: "¿Qué es la fascies neumónica?",
+        options: [
+          "En la neumonía neumocócica, en ocasiones se presenta eritema malar y herpes labial",
+          "En la neumonía atípica, es habitual observar cianosis central con aleteo nasal y tiraje",
+          "En la neumonía grave, corresponde a facies hipocrática con sudor frío y palidez extrema",
+          "En la neumonía intrahospitalaria, consiste en facies abotagada con edema periorbitario"
+        ],
+        answer: "En la neumonía neumocócica, en ocasiones se presenta eritema malar y herpes labial",
+        why: ""
+      },
+      {
+        id: "Manifestaciones clínicas de neumonía atípica",
+        prompt: "¿Cómo se expresan las manifestaciones clínicas de las neumonías atípicas?",
+        options: [
+          "Es común la presencia de disnea y tos seca, fiebre escasa, cefalea, vómitos, diarrea, mialgias y deterioro del estado general",
+          "Se presentan con fiebre alta, puntada de costado, expectoración herrumbrosa y soplo tubario florido",
+          "Predominan el dolor pleurítico intenso, la hemoptisis y el broncospasmo de instalación súbita",
+          "Se caracterizan por tos productiva purulenta, escalofríos intensos y consolidación lobar homogénea"
+        ],
+        answer: "Es común la presencia de disnea y tos seca, fiebre escasa, cefalea, vómitos, diarrea, mialgias y deterioro del estado general",
+        why: "Puede existir disociación entre las manifestaciones clínicas floridas del paciente y los escasos o nulos hallazgos semiológicos. La mayoría presenta forma asintomática o enfermedad leve o moderada."
+      },
+      {
+        id: "Etiología de neumonía atípica",
+        prompt: "¿Cuál es la etiología de la neumonía atípica?",
+        options: [
+          "Mycoplasma pneumoniae, Coxiella burnetii, Legionella pneumophila, Chlamydophila psittaci, Chlamydophila pneumoniae y virus como influenza y sarampión",
+          "Streptococcus pneumoniae, Haemophilus influenzae, Moraxella catarrhalis y Staphylococcus aureus",
+          "Klebsiella pneumoniae, Pseudomonas aeruginosa, Acinetobacter baumannii y Enterobacter cloacae",
+          "Mycobacterium tuberculosis, Nocardia asteroides, Actinomyces israelii y Pneumocystis jirovecii"
+        ],
+        answer: "Mycoplasma pneumoniae, Coxiella burnetii, Legionella pneumophila, Chlamydophila psittaci, Chlamydophila pneumoniae y virus como influenza y sarampión",
+        why: "En la radiografía de tórax es habitual observar infiltrados, con predominio en las bases pulmonares."
+      },
+      {
+        id: "Complicación de neumonía atípica",
+        prompt: "¿Cuál es una complicación de la neumonía atípica?",
+        options: [
+          "Síndrome de distrés respiratorio agudo (SDRA)",
+          "Neumotórax espontáneo primario",
+          "Derrame pleural quiloso",
+          "Cor pulmonale crónico"
+        ],
+        answer: "Síndrome de distrés respiratorio agudo (SDRA)",
+        why: ""
+      },
+      {
+        id: "Neumonía intrahospitalaria criterio",
+        prompt: "¿Cuál es el criterio de neumonía intrahospitalaria?",
+        options: [
+          "Neumonía que aparece 48 horas o más después de la internación y que no estaba presente ni en incubación al ingreso",
+          "Neumonía diagnosticada dentro de las primeras 24 horas de internación, aunque estuviera incubándose al ingreso",
+          "Neumonía que aparece 72 horas después del alta hospitalaria, independientemente de los síntomas previos",
+          "Toda neumonía asociada a ventilación mecánica, sin importar el momento de inicio"
+        ],
+        answer: "Neumonía que aparece 48 horas o más después de la internación y que no estaba presente ni en incubación al ingreso",
+        why: "La neumonía intrahospitalaria se define por el inicio 48 horas o más después del ingreso y por no estar presente ni incubándose al momento de la admisión. Los patógenos más habituales incluyen bacilos gramnegativos y Staphylococcus aureus. :contentReference[oaicite:0]{index=0}"
+      },
+      {
+        id: "Etiología de neumonía intrahospitalaria",
+        prompt: "¿Cuál es la etiología más frecuente de la neumonía intrahospitalaria?",
+        options: [
+          "Bacilos gramnegativos y Staphylococcus aureus",
+          "Mycoplasma pneumoniae y Chlamydophila pneumoniae",
+          "Streptococcus pneumoniae y Haemophilus influenzae exclusivamente",
+          "Virus influenza y virus sincicial respiratorio como causas predominantes"
+        ],
+        answer: "Bacilos gramnegativos y Staphylococcus aureus",
+        why: "En la neumonía intrahospitalaria predominan los bacilos gramnegativos y Staphylococcus aureus, incluidos microorganismos resistentes. :contentReference[oaicite:1]{index=1}"
+      },
+      {
+        id: "Definición de atelectasia",
+        prompt: "¿Cuál es la definición de atelectasia?",
+        options: [
+          "Disminución del volumen pulmonar total o parcial por pérdida del aire",
+          "Aumento irreversible del tamaño de los espacios aéreos distales con destrucción alveolar",
+          "Compromiso del espacio aéreo por ocupación alveolar inflamatoria",
+          "Acumulación de aire en el espacio pleural con colapso pulmonar secundario"
+        ],
+        answer: "Disminución del volumen pulmonar total o parcial por pérdida del aire",
+        why: ""
+      },
+      {
+        id: "Clasificación de atelectasia",
+        prompt: "¿Cómo se clasifica la atelectasia?",
+        options: [
+          "Obstructiva, pasiva, cicatrizal y adhesiva",
+          "Obstructiva, exudativa, fibrinosa y necrotizante",
+          "Central, periférica, segmentaria y lobar",
+          "Aguda, subaguda, crónica y recurrente"
+        ],
+        answer: "Obstructiva, pasiva, cicatrizal y adhesiva",
+        why: ""
+      },
+      {
+        id: "Atelectasia obstructiva",
+        prompt: "¿Cuál es la definición de atelectasia obstructiva?",
+        options: [
+          "Obstrucción extrínseca o intrínseca de la vía respiratoria",
+          "Compresión del espacio aéreo en contacto con la pleura por líquido o aire",
+          "Disminución del surfactante pulmonar con colapso alveolar espiratorio",
+          "Retracción pulmonar secundaria a fibrosis o cicatrices bronquiales"
+        ],
+        answer: "Obstrucción extrínseca o intrínseca de la vía respiratoria",
+        why: "La obstrucción intrínseca puede deberse a tapones mucosos, cuerpo extraño o tumor endobronquial; la extrínseca, a tumores, adenopatías o masas mediastínicas. Puede ser proximal/central o distal/periférica."
+      },
+      {
+        id: "Atelectasia pasiva",
+        prompt: "¿Cuál es la definición de atelectasia pasiva?",
+        options: [
+          "Compresión del espacio aéreo que se encuentra en contacto con la pleura",
+          "Obstrucción intrínseca de la vía aérea por tapones mucosos",
+          "Disminución del surfactante pulmonar con colapso alveolar",
+          "Retracción del parénquima por secuelas tuberculosas o fibrosis pulmonar"
+        ],
+        answer: "Compresión del espacio aéreo que se encuentra en contacto con la pleura",
+        why: "Se produce cuando el espacio pleural está ocupado por líquido (derrame pleural) o por aire (neumotórax)."
+      },
+      {
+        id: "Atelectasia cicatrizal",
+        prompt: "¿Cuál es la definición de atelectasia cicatrizal?",
+        options: [
+          "Cicatrices en los bronquios como secuela tuberculosa o fibrosis pulmonar",
+          "Compresión del parénquima pulmonar por derrame pleural o neumotórax",
+          "Obstrucción de la vía aérea por causas intrínsecas o extrínsecas",
+          "Disminución del surfactante pulmonar con imposibilidad de evitar el colapso alveolar"
+        ],
+        answer: "Cicatrices en los bronquios como secuela tuberculosa o fibrosis pulmonar",
+        why: ""
+      },
+      {
+        id: "Atelectasia adhesiva",
+        prompt: "¿Cuál es la definición de atelectasia adhesiva?",
+        options: [
+          "Disminución del surfactante pulmonar o sustancia tensoactiva",
+          "Compresión pleural del parénquima por líquido o aire",
+          "Obstrucción bronquial intrínseca o extrínseca",
+          "Pérdida de volumen por cicatrices broncopulmonares"
+        ],
+        answer: "Disminución del surfactante pulmonar o sustancia tensoactiva",
+        why: "El surfactante impide el colapso de los alvéolos durante la espiración."
+      },
+      {
+        id: "Retracción radiográfica en atelectasia",
+        prompt: "¿Cuál de las siguientes corresponde a signos radiográficos de retracción por atelectasia según el grado de volumen pulmonar afectado?",
+        options: [
+          "Disminución del volumen del hemitórax afectado, elevación diafragmática del lado afectado, desplazamiento homolateral del mediastino y de las cisuras, hiperinsuflación compensadora y retracción costal",
+          "Aumento del volumen del hemitórax afectado, descenso diafragmático ipsilateral, desplazamiento contralateral del mediastino y borramiento de los ángulos costofrénicos",
+          "Hipersonoridad pulmonar, horizontalización costal, ensanchamiento mediastínico y signo del menisco pleural",
+          "Cavitación apical, broncograma aéreo, patrón en vidrio esmerilado y adenopatías hiliares bilaterales"
+        ],
+        answer: "Disminución del volumen del hemitórax afectado, elevación diafragmática del lado afectado, desplazamiento homolateral del mediastino y de las cisuras, hiperinsuflación compensadora y retracción costal",
+        why: ""
+      },
+      {
+        id: "Complicaciones clínicas de atelectasia",
+        prompt: "¿Cuáles son las complicaciones clínicas de la atelectasia?",
+        options: [
+          "Hipoxemia e incluso insuficiencia respiratoria y neumonía",
+          "Hipercapnia crónica, cor pulmonale y neumotórax espontáneo",
+          "Hemoptisis masiva, cavitación y absceso pulmonar",
+          "Derrame pleural quiloso, bronquiectasias y fibrosis mediastínica"
+        ],
+        answer: "Hipoxemia e incluso insuficiencia respiratoria y neumonía",
+        why: "Se producen por alteración de la relación ventilación/perfusión con zona perfundida pero no ventilada, y por acumulación de moco con disminución del clearance bronquial."
+      },
+      {
+        id: "Situaciones clínicas que alertan atelectasia",
+        prompt: "¿Qué situaciones clínicas frecuentes deben alertar sobre la presencia de atelectasia?",
+        options: [
+          "Dificultad respiratoria aguda en el posoperatorio, neumonía que se repite en una misma localización pulmonar en un paciente tabaquista, y crisis asmática que no mejora o empeora a pesar del tratamiento",
+          "Dolor pleurítico de inicio súbito, roce pleural y fiebre alta en un paciente joven previamente sano",
+          "Hemoptisis crónica, pérdida de peso y sudoración nocturna en una persona con contacto tuberculoso",
+          "Ortopnea, edema de miembros inferiores y tercer ruido en un paciente hipertenso"
+        ],
+        answer: "Dificultad respiratoria aguda en el posoperatorio, neumonía que se repite en una misma localización pulmonar en un paciente tabaquista, y crisis asmática que no mejora o empeora a pesar del tratamiento",
+        why: ""
+      }
+    ];
+
+    let quiz = [];
+    let idx = 0;
+    let score = 0;
+    let streak = 0;
+    let autoAdvanceTimer = null;
+    let draggedId = null;
+
+    const elImgWrap = document.getElementById("imgWrap");
+    const elImgs = document.getElementById("qImgs");
+    const elOpen = document.getElementById("openImg");
+    const elImgTip = document.getElementById("imgTip");
+    const elCaseWrap = document.getElementById("caseWrap");
+    const elCaseText = document.getElementById("caseText");
+    const elNum = document.getElementById("qNum");
+    const elTotal = document.getElementById("qTotal");
+    const elScore = document.getElementById("score");
+    const elStreak = document.getElementById("streak");
+    const elPrompt = document.getElementById("qPrompt");
+    const elChoices = document.getElementById("choices");
+    const elFeedback = document.getElementById("feedback");
+    const elPartPill = document.getElementById("partPill");
+    const elPartNum = document.getElementById("partNum");
+    const elPartTotal = document.getElementById("partTotal");
+
+    const quizRow = document.getElementById("quizRow");
+    const questionHintControls = document.getElementById("questionHintControls");
+    const questionHintBtn = document.getElementById("questionHintBtn");
+    const questionHintWrap = document.getElementById("questionHintWrap");
+
+    const elMatchQuestionWrap = document.getElementById("matchQuestionWrap");
+    const checkMatchBtn = document.getElementById("checkMatchBtn");
+    const resetMatchBtn = document.getElementById("resetMatchBtn");
+    const matchBank = document.getElementById("matchBank");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function shuffleCopy(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function normalizeEntry(entry) {
+      if (entry.type === "matching") {
+        return [{
+          id: entry.id,
+          groupId: entry.id,
+          type: "matching",
+          part: 1,
+          partTotal: 1,
+          img: entry.img || "",
+          imgs: entry.imgs || [],
+          alt: entry.alt || entry.id,
+          caseText: entry.case || "",
+          prompt: entry.prompt,
+          matchItems: entry.matchItems ? entry.matchItems.slice() : [],
+          why: entry.why || ""
+        }];
+      }
+
+      if (Array.isArray(entry.questions)) {
+        return entry.questions.map((sub, i) => ({
+          id: entry.id + "::" + (i + 1),
+          groupId: entry.id,
+          type: "multiple",
+          part: i + 1,
+          partTotal: entry.questions.length,
+          img: entry.img || "",
+          imgs: entry.imgs || [],
+          alt: entry.alt || entry.id,
+          caseText: entry.case || "",
+          prompt: sub.prompt,
+          options: sub.options.slice(),
+          answer: sub.answer,
+          why: sub.why
+        }));
+      }
+
+      return [{
+        id: entry.id,
+        groupId: entry.id,
+        type: "multiple",
+        part: 1,
+        partTotal: 1,
+        img: entry.img || "",
+        imgs: entry.imgs || [],
+        alt: entry.alt || entry.id,
+        caseText: entry.case || "",
+        prompt: entry.prompt,
+        options: entry.options.slice(),
+        answer: entry.answer,
+        why: entry.why
+      }];
+    }
+
+    function buildQuiz(shuffleGroups = true) {
+      const groups = shuffleGroups ? shuffle(BANK) : BANK.slice();
+      return groups.flatMap(normalizeEntry);
+    }
+
+    function start(shuffleAll = true) {
+      clearTimeout(autoAdvanceTimer);
+      quiz = buildQuiz(shuffleAll);
+      idx = 0;
+      score = 0;
+      streak = 0;
+      render();
+    }
+
+    function getDropZones() {
+      return Array.from(document.querySelectorAll(".dropZone"));
+    }
+
+    function createMatchChip(item) {
+      const chip = document.createElement("div");
+      chip.className = "draggableItem";
+      chip.draggable = true;
+      chip.textContent = item.text;
+      chip.dataset.id = item.id;
+
+      chip.addEventListener("dragstart", () => {
+        draggedId = item.id;
+      });
+
+      chip.addEventListener("dragend", () => {
+        draggedId = null;
+      });
+
+      return chip;
+    }
+
+    function resetMatchQuestion(q) {
+      if (!q || q.type !== "matching") return;
+
+      matchBank.innerHTML = "";
+
+      getDropZones().forEach(zone => {
+        zone.innerHTML = "";
+        zone.classList.remove("filled", "correct", "wrong");
+      });
+
+      shuffleCopy(q.matchItems).forEach(item => {
+        matchBank.appendChild(createMatchChip(item));
+      });
+    }
+
+    function checkMatchQuestion(q) {
+      if (!q || q.type !== "matching") return;
+
+      let correctCount = 0;
+      const total = q.matchItems.length;
+
+      getDropZones().forEach(zone => {
+        zone.classList.remove("correct", "wrong");
+
+        const chip = zone.querySelector(".draggableItem");
+        if (!chip) return;
+
+        const item = q.matchItems.find(x => x.id === chip.dataset.id);
+        const ok = item &&
+          item.syndrome === zone.dataset.syndrome &&
+          item.slot === zone.dataset.slot;
+
+        if (ok) {
+          zone.classList.add("correct");
+          correctCount += 1;
+        } else {
+          zone.classList.add("wrong");
+        }
+      });
+
+      if (correctCount === total) {
+        score += 1;
+        streak += 1;
+        elFeedback.className = "feedback ok";
+        elFeedback.innerHTML = "<b>Correcto.</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+      } else {
+        streak = 0;
+        elFeedback.className = "feedback no";
+        elFeedback.innerHTML = "<b>Resultado:</b> " + correctCount + " de " + total + " correctas.<div class='explain'>" + escapeHtml(q.why) + "</div>";
+      }
+
+      elFeedback.style.display = "block";
+      elScore.textContent = String(score);
+      elStreak.textContent = String(streak);
+    }
+
+    function attachMatchDropEvents() {
+      getDropZones().forEach(zone => {
+        zone.addEventListener("dragover", e => {
+          e.preventDefault();
+        });
+
+        zone.addEventListener("drop", e => {
+          e.preventDefault();
+          if (!draggedId) return;
+
+          const draggedEl = document.querySelector(`.draggableItem[data-id="${draggedId}"]`);
+          if (!draggedEl) return;
+
+          const existing = zone.querySelector(".draggableItem");
+          if (existing) {
+            matchBank.appendChild(existing);
+          }
+
+          zone.appendChild(draggedEl);
+          zone.classList.add("filled");
+          zone.classList.remove("correct", "wrong");
+        });
+      });
+
+      matchBank.addEventListener("dragover", e => {
+        e.preventDefault();
+      });
+
+      matchBank.addEventListener("drop", e => {
+        e.preventDefault();
+        if (!draggedId) return;
+
+        const draggedEl = document.querySelector(`.draggableItem[data-id="${draggedId}"]`);
+        if (!draggedEl) return;
+
+        matchBank.appendChild(draggedEl);
+
+        getDropZones().forEach(zone => {
+          if (!zone.querySelector(".draggableItem")) {
+            zone.classList.remove("filled", "correct", "wrong");
+          }
+        });
+      });
+    }
+
+    function shouldShowSemiologyHint(q) {
+      return q.id === "Atelectasia masiva por tapón mucoso::2";
+    }
+
+    function render() {
+      clearTimeout(autoAdvanceTimer);
+
+      const q = quiz[idx];
+      elNum.textContent = String(idx + 1);
+      elTotal.textContent = String(quiz.length);
+      elScore.textContent = String(score);
+      elStreak.textContent = String(streak);
+      elPrompt.textContent = q.prompt;
+
+      questionHintWrap.style.display = "none";
+      questionHintBtn.textContent = "Pista";
+
+      if ((q.imgs && q.imgs.length) || q.img) {
+        elImgWrap.style.display = "block";
+        elImgTip.style.display = "block";
+        elImgs.innerHTML = "";
+
+        const imageList = (q.imgs && q.imgs.length) ? q.imgs : [q.img];
+        elImgs.className = imageList.length === 2 ? "twoImages" : "";
+
+        imageList.forEach(src => {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = q.alt || "Imagen de la pregunta";
+          elImgs.appendChild(img);
+        });
+
+        elOpen.href = imageList[0];
+      } else {
+        elImgWrap.style.display = "none";
+        elImgTip.style.display = "none";
+        elImgs.innerHTML = "";
+      }
+
+      if (q.caseText) {
+        elCaseWrap.style.display = "block";
+        elCaseText.textContent = q.caseText;
+      } else {
+        elCaseWrap.style.display = "none";
+        elCaseText.textContent = "";
+      }
+
+      if (q.partTotal > 1) {
+        elPartPill.style.display = "inline-flex";
+        elPartNum.textContent = String(q.part);
+        elPartTotal.textContent = String(q.partTotal);
+      } else {
+        elPartPill.style.display = "none";
+      }
+
+      elFeedback.style.display = "none";
+      elFeedback.className = "feedback";
+      elFeedback.innerHTML = "";
+
+      if (q.type === "matching") {
+        quizRow.classList.add("matchingMode");
+
+        questionHintControls.style.display = "none";
+        elChoices.style.display = "none";
+        elChoices.innerHTML = "";
+        elMatchQuestionWrap.style.display = "block";
+        resetMatchQuestion(q);
+      } else {
+        quizRow.classList.remove("matchingMode");
+
+        elMatchQuestionWrap.style.display = "none";
+        questionHintControls.style.display = shouldShowSemiologyHint(q) ? "flex" : "none";
+
+        elChoices.style.display = "grid";
+
+        const opts = shuffle(q.options);
+        elChoices.innerHTML = "";
+
+        opts.forEach(opt => {
+          const b = document.createElement("button");
+          b.className = "choice";
+          b.type = "button";
+          b.textContent = opt;
+          b.addEventListener("click", () => onPick(opt, q));
+          elChoices.appendChild(b);
+        });
+      }
+
+      prevBtn.disabled = (idx === 0);
+      nextBtn.disabled = (idx === quiz.length - 1);
+    }
+
+    function onPick(opt, q) {
+      const buttons = Array.from(document.querySelectorAll("button.choice"));
+      buttons.forEach(b => b.disabled = true);
+
+      const correct = (opt === q.answer);
+
+      buttons.forEach(b => {
+        if (b.textContent === q.answer) b.classList.add("correct");
+        if (b.textContent === opt && !correct) b.classList.add("wrong");
+      });
+
+      if (correct) {
+        score += 1;
+        streak += 1;
+        elFeedback.className = "feedback ok";
+        elFeedback.innerHTML = "<b>Correcto.</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+      } else {
+        streak = 0;
+        elFeedback.className = "feedback no";
+        elFeedback.innerHTML = "<b>No es correcto.</b> Respuesta correcta: <b>" + escapeHtml(q.answer) + "</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+      }
+
+      elFeedback.style.display = "block";
+      elScore.textContent = String(score);
+      elStreak.textContent = String(streak);
+
+      const nextQuestion = quiz[idx + 1];
+      const isLinkedNext = correct && nextQuestion && nextQuestion.groupId === q.groupId;
+
+      if (isLinkedNext) {
+        autoAdvanceTimer = setTimeout(() => {
+          idx += 1;
+          render();
+        }, 900);
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (idx > 0) {
+        idx -= 1;
+        render();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (idx < quiz.length - 1) {
+        idx += 1;
+        render();
+      }
+    });
+
+    shuffleBtn.addEventListener("click", () => start(true));
+
+    resetBtn.addEventListener("click", () => {
+      score = 0;
+      streak = 0;
+      render();
+    });
+
+    questionHintBtn.addEventListener("click", () => {
+      if (questionHintWrap.style.display === "none") {
+        questionHintWrap.style.display = "block";
+        questionHintBtn.textContent = "Ocultar pista";
+      } else {
+        questionHintWrap.style.display = "none";
+        questionHintBtn.textContent = "Pista";
+      }
+    });
+
+    checkMatchBtn.addEventListener("click", () => {
+      const q = quiz[idx];
+      checkMatchQuestion(q);
+    });
+
+    resetMatchBtn.addEventListener("click", () => {
+      const q = quiz[idx];
+      resetMatchQuestion(q);
+    });
+
+    attachMatchDropEvents();
+    start(true);
+  </script>
+</body>
+</html>
