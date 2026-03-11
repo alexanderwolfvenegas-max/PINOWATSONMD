@@ -264,7 +264,7 @@ export const BANK_EXAMEN_FISICO = [
   },
   {
     id: "Torax_hiperinsuflado",
-    img: "images/Fig.41-18.png",
+    img: "images/Fig. 41-18.png",
     alt: "Tórax hiperinsuflado",
     prompt: "¿Qué conjunto de hallazgos radiográficos corresponde a un tórax hiperinsuflado?",
     options: [
