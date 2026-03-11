@@ -181,6 +181,106 @@ export const BANK_EXAMEN_FISICO = [
     }
   ]
 },
+[
+  {
+    id: "Condensacion_segmento_anterior_LSD",
+    img: "images/Fig.41-12.png",
+    alt: "Condensación pulmonar del segmento anterior del lóbulo superior derecho",
+    prompt: "Identifica el hallazgo radiográfico mostrado en la imagen.",
+    options: [
+      "Condensación pulmonar del segmento anterior del lóbulo superior derecho",
+      "Derrame pleural derecho",
+      "Atelectasia del pulmón izquierdo",
+      "Neumotórax derecho"
+    ],
+    answer: "Condensación pulmonar del segmento anterior del lóbulo superior derecho",
+    why: "La imagen corresponde a una opacidad parenquimatosa localizada compatible con condensación pulmonar en el segmento anterior del lóbulo superior derecho."
+  },
+  {
+    id: "Derrame_pleural_derecho",
+    img: "images/Fig.41-13.png",
+    alt: "Derrame pleural derecho",
+    prompt: "¿Cuál es el signo radiográfico característico que identifica esta imagen?",
+    options: [
+      "Opacidad basal con borramiento del seno costodiafragmático y límite superior cóncavo (curva de Damoiseau)",
+      "Broncograma aéreo en un infiltrado homogéneo",
+      "Hiperclaridad periférica con muñón pulmonar hiliar",
+      "Desplazamiento mediastínico hacia el mismo lado con elevación diafragmática"
+    ],
+    answer: "Opacidad basal con borramiento del seno costodiafragmático y límite superior cóncavo (curva de Damoiseau)",
+    why: "El derrame pleural derecho se reconoce por la opacidad del tercio inferior, el borramiento del seno costodiafragmático y el límite superior cóncavo típico."
+  },
+  {
+    id: "Derrame_pleural_izquierdo_masivo",
+    img: "images/Fig.41-14.png",
+    alt: "Derrame pleural izquierdo masivo con desplazamiento mediastínico",
+    prompt: "¿Qué hallazgo permite reconocer un derrame pleural izquierdo masivo en esta radiografía?",
+    options: [
+      "Tórax opaco con desplazamiento del mediastino y la tráquea hacia el lado opuesto",
+      "Tórax opaco con desplazamiento del mediastino y la tráquea hacia el mismo lado",
+      "Línea horizontal hidroaérea en el hemitórax izquierdo",
+      "Hiperclaridad periférica con desaparición de la trama vascular"
+    ],
+    answer: "Tórax opaco con desplazamiento del mediastino y la tráquea hacia el lado opuesto",
+    why: "En el derrame pleural masivo, el líquido ocupa gran parte del hemitórax y empuja el mediastino y la tráquea hacia el lado contrario."
+  },
+  {
+    id: "Atelectasia_pulmon_izquierdo",
+    img: "images/Fig.41-15.png",
+    alt: "Atelectasia del pulmón izquierdo",
+    prompt: "¿Cuál es la combinación de signos radiográficos más sugestiva de atelectasia del pulmón izquierdo?",
+    options: [
+      "Pinzamiento de las costillas, elevación del hemidiafragma y desplazamiento del mediastino y la tráquea hacia el lado afectado",
+      "Borramiento del seno costodiafragmático y curva de Damoiseau",
+      "Hiperclaridad periférica y muñón pulmonar a nivel del hilio",
+      "Línea horizontal de nivel hidroaéreo en el hemitórax"
+    ],
+    answer: "Pinzamiento de las costillas, elevación del hemidiafragma y desplazamiento del mediastino y la tráquea hacia el lado afectado",
+    why: "La atelectasia produce pérdida de volumen, por lo que las estructuras vecinas se desplazan hacia el lado colapsado."
+  },
+  {
+    id: "Hidroneumotorax_izquierdo",
+    img: "images/Fig.41-16.png",
+    alt: "Hidroneumotórax izquierdo",
+    prompt: "¿Qué signo radiográfico define mejor esta imagen?",
+    options: [
+      "Presencia de una línea horizontal del derrame",
+      "Curva parabólica de Damoiseau",
+      "Broncograma aéreo",
+      "Desplazamiento traqueal homolateral por pérdida de volumen"
+    ],
+    answer: "Presencia de una línea horizontal del derrame",
+    why: "El hidroneumotórax se caracteriza por un nivel hidroaéreo horizontal debido a la coexistencia de aire y líquido en la cavidad pleural."
+  },
+  {
+    id: "Neumotorax_derecho",
+    img: "images/Fig.41-17.png",
+    alt: "Neumotórax derecho",
+    prompt: "¿Cuál es el hallazgo radiográfico característico del neumotórax derecho?",
+    options: [
+      "Hiperclaridad periférica y muñón pulmonar a nivel del hilio",
+      "Opacidad homogénea con broncograma aéreo",
+      "Borramiento del seno costodiafragmático con límite cóncavo superior",
+      "Elevación del hemidiafragma con pinzamiento costal"
+    ],
+    answer: "Hiperclaridad periférica y muñón pulmonar a nivel del hilio",
+    why: "En el neumotórax, el aire pleural genera hiperclaridad periférica y el pulmón retraído se observa como un muñón hacia el hilio."
+  },
+  {
+    id: "Torax_hiperinsuflado",
+    img: "images/Fig.41-18.png",
+    alt: "Tórax hiperinsuflado",
+    prompt: "¿Qué conjunto de hallazgos radiográficos corresponde a un tórax hiperinsuflado?",
+    options: [
+      "Aumento del diámetro vertical, horizontalización de las costillas, aplanamiento del diafragma y aumento del diámetro anteroposterior",
+      "Opacidad basal con curva de Damoiseau y desplazamiento contralateral del mediastino",
+      "Pérdida de volumen pulmonar con ascenso diafragmático y desviación homolateral de la tráquea",
+      "Opacidad homogénea segmentaria con broncograma aéreo"
+    ],
+    answer: "Aumento del diámetro vertical, horizontalización de las costillas, aplanamiento del diafragma y aumento del diámetro anteroposterior",
+    why: "Esos son los signos clásicos de hiperinsuflación torácica en la radiografía de frente y perfil."
+  }
+]
 
 ];
 
