@@ -1,4 +1,5 @@
 import { QUIZ_BANKS } from "./banks/index.js";
+
 let quiz = [];
 let idx = 0;
 let score = 0;
@@ -14,16 +15,25 @@ const syndromeLabels = {
   condensacion: "Síndrome de condensación con bronquio permeable",
   atelectasico: "Síndrome atelectásico",
   derrame_pleural: "Síndrome de derrame pleural",
-  neumotorax: "Síndrome del neumotórax"
+  neumotorax: "Síndrome del neumotórax",
+
+  neumonia: "Condensación con luz bronquial permeable (neumonía)",
+  atelectasia: "Condensación con luz bronquial obstruida (atelectasia por obstrucción)",
+  derrame: "Derrame pleural"
 };
 
-const slotLabels = {
-  dato_clinico: "Dato clínico",
-  ventilacion: "Ventilación",
-  tos: "Tos",
-  vibraciones_vocales: "Vibraciones vocales",
-  percusion: "Percusión",
-  auscultacion: "Auscultación"
+const slotMeta = {
+  dato_clinico: { label: "Dato clínico" },
+  ventilacion: { label: "Ventilación" },
+  tos: { label: "Tos" },
+  vibraciones_vocales: { label: "Vibraciones vocales" },
+  percusion: { label: "Percusión" },
+  auscultacion: { label: "Auscultación" },
+
+  inspeccion: { label: "Inspección", subLabel: "Patrón ventilatorio" },
+  palpacion: { label: "Palpación", subLabel: "Vibraciones vocales" },
+  percusion_pulmonar: { label: "Percusión", subLabel: "Pulmonar" },
+  percusion_columna: { label: "Percusión", subLabel: "De la columna" }
 };
 
 const elImgWrap = document.getElementById("imgWrap");
@@ -71,7 +81,7 @@ const elTimerValue = document.getElementById("timerValue");
 const pageParams = new URLSearchParams(window.location.search);
 const requestedUnit = pageParams.get("unit");
 const defaultUnit = "parenquimatosos";
-const BANK = QUIZ_BANKS[requestedUnit] || QUIZ_BANKS[defaultUnit];
+const BANK = QUIZ_BANKS[requestedUnit] || QUIZ_BANKS[defaultUnit] || [];
 
 const isTestMode = pageParams.get("mode") === "test";
 const testConfig = readTestConfig();
@@ -91,14 +101,14 @@ function readTestConfig() {
       secondsPerQuestion: Math.max(1, Number(parsed.secondsPerQuestion) || 60),
       timed: Boolean(parsed.timed)
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }
 
 function shuffle(arr) {
   const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
+  for (let i = a.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
@@ -122,15 +132,15 @@ function normalizeEntry(entry) {
       alt: entry.alt || entry.id,
       caseText: entry.case || "",
       prompt: entry.prompt,
-      matchItems: entry.matchItems ? entry.matchItems.slice() : [],
-      matchBoard: entry.matchBoard ? JSON.parse(JSON.stringify(entry.matchBoard)) : [],
+      matchItems: Array.isArray(entry.matchItems) ? entry.matchItems.slice() : [],
+      matchBoard: Array.isArray(entry.matchBoard) ? JSON.parse(JSON.stringify(entry.matchBoard)) : [],
       why: entry.why || ""
     }];
   }
 
   if (Array.isArray(entry.questions)) {
     return entry.questions.map((sub, i) => ({
-      id: entry.id + "::" + (i + 1),
+      id: `${entry.id}::${i + 1}`,
       groupId: entry.id,
       type: "multiple",
       part: i + 1,
@@ -162,12 +172,47 @@ function normalizeEntry(entry) {
     why: entry.why
   }];
 }
+
+function buildFallbackMatchBoard(q) {
+  if (!q || !Array.isArray(q.matchItems)) return [];
+
+  const syndromeOrder = [];
+  const slotOrderBySyndrome = {};
+
+  q.matchItems.forEach(item => {
+    if (!syndromeOrder.includes(item.syndrome)) {
+      syndromeOrder.push(item.syndrome);
+      slotOrderBySyndrome[item.syndrome] = [];
+    }
+
+    if (!slotOrderBySyndrome[item.syndrome].includes(item.slot)) {
+      slotOrderBySyndrome[item.syndrome].push(item.slot);
+    }
+  });
+
+  return syndromeOrder.map(syndrome => ({
+    syndrome,
+    title: syndromeLabels[syndrome] || syndrome,
+    rows: slotOrderBySyndrome[syndrome].map(slot => ({
+      slot,
+      label: slotMeta[slot]?.label || slot,
+      subLabel: slotMeta[slot]?.subLabel || ""
+    }))
+  }));
+}
+
 function renderMatchBoard(q) {
+  if (!matchGrid) return;
+
   matchGrid.innerHTML = "";
 
-  if (!q || q.type !== "matching" || !Array.isArray(q.matchBoard)) return;
+  if (!q || q.type !== "matching") return;
 
-  q.matchBoard.forEach(card => {
+  const board = Array.isArray(q.matchBoard) && q.matchBoard.length
+    ? q.matchBoard
+    : buildFallbackMatchBoard(q);
+
+  board.forEach(card => {
     const cardEl = document.createElement("div");
     cardEl.className = "syndromeCard";
 
@@ -184,7 +229,7 @@ function renderMatchBoard(q) {
       labelEl.className = "dropLabel";
 
       if (row.subLabel) {
-        labelEl.innerHTML = escapeHtml(row.label) + "<br><span>" + escapeHtml(row.subLabel) + "</span>";
+        labelEl.innerHTML = `${escapeHtml(row.label)}<br><span>${escapeHtml(row.subLabel)}</span>`;
       } else {
         labelEl.textContent = row.label;
       }
@@ -202,6 +247,7 @@ function renderMatchBoard(q) {
     matchGrid.appendChild(cardEl);
   });
 }
+
 function buildQuiz(sourceBank = BANK, shuffleGroups = true) {
   const groups = shuffleGroups ? shuffle(sourceBank) : sourceBank.slice();
   return groups.flatMap(normalizeEntry);
@@ -216,9 +262,7 @@ function resequenceSelectedQuizItems(items) {
   });
 
   return items.map(item => {
-    if (item.type !== "multiple") {
-      return item;
-    }
+    if (item.type !== "multiple") return item;
 
     groupSeen[item.groupId] = (groupSeen[item.groupId] || 0) + 1;
 
@@ -230,10 +274,12 @@ function resequenceSelectedQuizItems(items) {
   });
 }
 
-function entryMatchesSelectedUnits(entry, units) {
-  if (!Array.isArray(units) || units.length === 0) return true;
+function getBanksForSelectedUnits(units) {
+  if (!Array.isArray(units) || units.length === 0) {
+    return QUIZ_BANKS[defaultUnit] ? QUIZ_BANKS[defaultUnit].slice() : [];
+  }
 
-  return units.includes("parenquimatosos");
+  return units.flatMap(unitKey => QUIZ_BANKS[unitKey] || []);
 }
 
 function isCaseEntry(entry) {
@@ -244,8 +290,8 @@ function isNormalEntry(entry) {
   return !Array.isArray(entry.questions);
 }
 
-function filterBankForTest(sourceBank, config) {
-  let filtered = sourceBank.filter(entry => entryMatchesSelectedUnits(entry, config.units));
+function filterEntriesForTest(entries, config) {
+  let filtered = entries.slice();
 
   if (config.mode === "casos") {
     filtered = filtered.filter(isCaseEntry);
@@ -257,8 +303,9 @@ function filterBankForTest(sourceBank, config) {
 }
 
 function buildTestQuiz(config) {
-  const filteredBank = filterBankForTest(BANK, config);
-  const normalized = buildQuiz(filteredBank, true);
+  const selectedEntries = getBanksForSelectedUnits(config.units);
+  const filteredEntries = filterEntriesForTest(selectedEntries, config);
+  const normalized = buildQuiz(filteredEntries, true);
 
   if (config.questionCount === "all") {
     return normalized;
@@ -324,7 +371,7 @@ function handleTimeExpired() {
   });
 
   elFeedback.className = "feedback no";
-  elFeedback.innerHTML = "<b>Tiempo agotado.</b> Respuesta correcta: <b>" + escapeHtml(q.answer) + "</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+  elFeedback.innerHTML = `<b>Tiempo agotado.</b> Respuesta correcta: <b>${escapeHtml(q.answer)}</b><div class='explain'>${escapeHtml(q.why)}</div>`;
   elFeedback.style.display = "block";
   elStreak.textContent = String(streak);
 
@@ -405,7 +452,7 @@ function createMatchChip(item) {
   chip.textContent = item.text;
   chip.dataset.id = item.id;
 
-  chip.addEventListener("dragstart", (e) => {
+  chip.addEventListener("dragstart", e => {
     draggedId = item.id;
     chip.classList.add("dragging");
 
@@ -438,13 +485,6 @@ function resetMatchQuestion(q) {
   });
 }
 
-function normalizeMatchText(text) {
-  return String(text)
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-}
-
 function checkMatchQuestion(q) {
   if (!q || q.type !== "matching") return;
 
@@ -456,10 +496,7 @@ function checkMatchQuestion(q) {
     zone.classList.remove("correct", "wrong");
 
     const expectedIds = q.matchItems
-      .filter(item =>
-        item.syndrome === zone.dataset.syndrome &&
-        item.slot === zone.dataset.slot
-      )
+      .filter(item => item.syndrome === zone.dataset.syndrome && item.slot === zone.dataset.slot)
       .map(item => item.id)
       .sort();
 
@@ -494,28 +531,24 @@ function checkMatchQuestion(q) {
     score += 1;
     streak += 1;
     elFeedback.className = "feedback ok";
-    elFeedback.innerHTML = "<b>Correcto.</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+    elFeedback.innerHTML = `<b>Correcto.</b><div class='explain'>${escapeHtml(q.why)}</div>`;
   } else {
     if (!missedQuestions.some(item => item.id === q.id)) {
       missedQuestions.push(q);
     }
     streak = 0;
     elFeedback.className = "feedback no";
-    elFeedback.innerHTML =
-      "<b>Resultado:</b> " +
-      correctCount +
-      " de " +
-      q.matchItems.length +
-      " correctas.<div class='explain'>" +
-      escapeHtml(q.why) +
-      "</div>";
+    elFeedback.innerHTML = `<b>Resultado:</b> ${correctCount} de ${q.matchItems.length} correctas.<div class='explain'>${escapeHtml(q.why)}</div>`;
   }
 
   elFeedback.style.display = "block";
   elScore.textContent = String(score);
   elStreak.textContent = String(streak);
 }
+
 function attachMatchDropEvents() {
+  if (!matchGrid) return;
+
   matchGrid.addEventListener("dragover", e => {
     const zone = e.target.closest(".dropZone");
     if (zone) {
@@ -543,10 +576,7 @@ function attachMatchDropEvents() {
     zone.classList.remove("correct", "wrong");
 
     if (oldParent && oldParent.classList.contains("dropZone") && oldParent !== zone) {
-      oldParent.classList.toggle(
-        "filled",
-        oldParent.querySelectorAll(".draggableItem").length > 0
-      );
+      oldParent.classList.toggle("filled", oldParent.querySelectorAll(".draggableItem").length > 0);
       oldParent.classList.remove("correct", "wrong");
     }
   });
@@ -569,10 +599,7 @@ function attachMatchDropEvents() {
     matchBank.appendChild(draggedEl);
 
     if (oldParent && oldParent.classList.contains("dropZone")) {
-      oldParent.classList.toggle(
-        "filled",
-        oldParent.querySelectorAll(".draggableItem").length > 0
-      );
+      oldParent.classList.toggle("filled", oldParent.querySelectorAll(".draggableItem").length > 0);
       oldParent.classList.remove("correct", "wrong");
     }
   });
@@ -648,17 +675,17 @@ function render() {
   elFeedback.innerHTML = "";
 
   if (q.type === "matching") {
-  quizRow.classList.add("matchingMode");
-  quizRow.classList.remove("textOnlyMode");
+    quizRow.classList.add("matchingMode");
+    quizRow.classList.remove("textOnlyMode");
 
-  questionHintControls.style.display = "none";
-  elChoices.style.display = "none";
-  elChoices.innerHTML = "";
-  elMatchQuestionWrap.style.display = "block";
+    questionHintControls.style.display = "none";
+    elChoices.style.display = "none";
+    elChoices.innerHTML = "";
+    elMatchQuestionWrap.style.display = "block";
 
-  renderMatchBoard(q);
-  resetMatchQuestion(q);
-} else {
+    renderMatchBoard(q);
+    resetMatchQuestion(q);
+  } else {
     quizRow.classList.remove("matchingMode");
 
     if (isTextOnly) {
@@ -684,23 +711,23 @@ function render() {
     });
   }
 
-if (isTestMode) {
-  prevBtn.style.display = "none";
-  shuffleBtn.style.display = "none";
-  resetBtn.style.display = "none";
+  if (isTestMode) {
+    prevBtn.style.display = "none";
+    shuffleBtn.style.display = "none";
+    resetBtn.style.display = "none";
 
-  if (elTimerStat) {
-    elTimerStat.style.display = (testConfig && testConfig.timed) ? "block" : "none";
-  }
-} else {
-  prevBtn.style.display = "";
-  shuffleBtn.style.display = "";
-  resetBtn.style.display = "";
+    if (elTimerStat) {
+      elTimerStat.style.display = (testConfig && testConfig.timed) ? "block" : "none";
+    }
+  } else {
+    prevBtn.style.display = "";
+    shuffleBtn.style.display = "";
+    resetBtn.style.display = "";
 
-  if (elTimerStat) {
-    elTimerStat.style.display = "none";
+    if (elTimerStat) {
+      elTimerStat.style.display = "none";
+    }
   }
-}
 
   prevBtn.disabled = (idx === 0);
   nextBtn.textContent = (idx === quiz.length - 1) ? "Finalizar" : "Siguiente ▶";
@@ -714,9 +741,11 @@ function onPick(opt, q) {
   clearQuestionTimer();
 
   const buttons = Array.from(document.querySelectorAll("button.choice"));
-  buttons.forEach(b => b.disabled = true);
+  buttons.forEach(b => {
+    b.disabled = true;
+  });
 
-  const correct = (opt === q.answer);
+  const correct = opt === q.answer;
 
   buttons.forEach(b => {
     if (b.textContent === q.answer) b.classList.add("correct");
@@ -727,14 +756,14 @@ function onPick(opt, q) {
     score += 1;
     streak += 1;
     elFeedback.className = "feedback ok";
-    elFeedback.innerHTML = "<b>Correcto.</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+    elFeedback.innerHTML = `<b>Correcto.</b><div class='explain'>${escapeHtml(q.why)}</div>`;
   } else {
     if (!missedQuestions.some(item => item.id === q.id)) {
       missedQuestions.push(q);
     }
     streak = 0;
     elFeedback.className = "feedback no";
-    elFeedback.innerHTML = "<b>No es correcto.</b> Respuesta correcta: <b>" + escapeHtml(q.answer) + "</b><div class='explain'>" + escapeHtml(q.why) + "</div>";
+    elFeedback.innerHTML = `<b>No es correcto.</b> Respuesta correcta: <b>${escapeHtml(q.answer)}</b><div class='explain'>${escapeHtml(q.why)}</div>`;
   }
 
   elFeedback.style.display = "block";

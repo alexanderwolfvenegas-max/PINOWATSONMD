@@ -180,7 +180,7 @@ export const BANK_EXAMEN_FISICO = [
 
   {
     id: "Condensacion_segmento_anterior_LSD",
-    img: "images/Fig.41-12.png",
+    img: "images/Fig. 41-12.png",
     alt: "Condensación pulmonar del segmento anterior del lóbulo superior derecho",
     prompt: "Identifica el hallazgo radiográfico mostrado en la imagen.",
     options: [
@@ -194,7 +194,7 @@ export const BANK_EXAMEN_FISICO = [
   },
   {
     id: "Derrame_pleural_derecho",
-    img: "images/Fig.41-13.png",
+    img: "images/Fig. 41-13.png",
     alt: "Derrame pleural derecho",
     prompt: "¿Cuál es el signo radiográfico característico que identifica esta imagen?",
     options: [
@@ -208,7 +208,7 @@ export const BANK_EXAMEN_FISICO = [
   },
   {
     id: "Derrame_pleural_izquierdo_masivo",
-    img: "images/Fig.41-14.png",
+    img: "images/Fig. 41-14.png",
     alt: "Derrame pleural izquierdo masivo con desplazamiento mediastínico",
     prompt: "¿Qué hallazgo permite reconocer un derrame pleural izquierdo masivo en esta radiografía?",
     options: [
@@ -222,7 +222,7 @@ export const BANK_EXAMEN_FISICO = [
   },
   {
     id: "Atelectasia_pulmon_izquierdo",
-    img: "images/Fig.41-15.png",
+    img: "images/Fig. 41-15.png",
     alt: "Atelectasia del pulmón izquierdo",
     prompt: "¿Cuál es la combinación de signos radiográficos más sugestiva de atelectasia del pulmón izquierdo?",
     options: [
@@ -236,7 +236,7 @@ export const BANK_EXAMEN_FISICO = [
   },
   {
     id: "Hidroneumotorax_izquierdo",
-    img: "images/Fig.41-16.png",
+    img: "images/Fig. 41-16.png",
     alt: "Hidroneumotórax izquierdo",
     prompt: "¿Qué signo radiográfico define mejor esta imagen?",
     options: [
@@ -250,7 +250,7 @@ export const BANK_EXAMEN_FISICO = [
   },
   {
     id: "Neumotorax_derecho",
-    img: "images/Fig.41-17.png",
+    img: "images/Fig. 41-17.png",
     alt: "Neumotórax derecho",
     prompt: "¿Cuál es el hallazgo radiográfico característico del neumotórax derecho?",
     options: [
