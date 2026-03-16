@@ -267,6 +267,55 @@ export const BANK_ENFERMEDADES_VALVULARES = [
   ],
   answer: "Expansión sistólica del hígado en forma de latido transversal o en balancín por reflujo hacia la aurícula derecha y el sistema venoso sistémico",
   why: "Cuando aparece insuficiencia tricuspídea, el reflujo de sangre hacia la aurícula derecha y el sistema venoso sistémico provoca expansión sistólica del hígado. Esta expansión se manifiesta como un latido transversal o en balancín y se percibe con la palma de la mano colocada sobre la cara anterior de la víscera."
-}
+},
+  {
+    id: "Estenosis mitral auscultación y gravedad",
+    prompt: "¿Qué combinación auscultatoria orienta con mayor fuerza a estenosis mitral grave y no a una forma leve o a otra valvulopatía?",
+    options: [
+      "Primer ruido disminuido, segundo ruido aumentado, intervalo R2-chasquido de apertura acortado y rolido diastólico prolongado",
+      "Primer ruido aumentado, segundo ruido normal, chasquido de apertura ausente por definición y soplo mesosistólico apical irradiado a axila",
+      "Segundo ruido ampliamente desdoblado, clic eyectivo aórtico y soplo diastólico decreciente paraesternal izquierdo",
+      "Primer ruido variable, tercer ruido intenso y soplo holosistólico en borde esternal inferior que aumenta con la inspiración"
+    ],
+    answer: "Primer ruido disminuido, segundo ruido aumentado, intervalo R2-chasquido de apertura acortado y rolido diastólico prolongado",
+    why: "En la estenosis mitral, el primer ruido está casi siempre aumentado de intensidad y es más tardío por el aumento de la excursión valvular secundario al incremento de la presión auricular izquierda; en formas muy leves puede ser normal y en las muy graves puede hacerse normal o disminuido por fibrosis y calcificación que limitan la movilidad valvular. El segundo ruido no se modifica en las formas leves, pero cuando aparece hipertensión pulmonar disminuye el desdoblamiento fisiológico y aumenta la intensidad del componente pulmonar. El chasquido de apertura se ausculta inmediatamente después del segundo ruido, en ápex o borde paraesternal izquierdo con la membrana del estetoscopio, y puede desaparecer si las valvas están muy calcificadas; el intervalo R2-chasquido varía entre 40 y 120 ms y guarda relación inversa con la gravedad de la estenosis. El rolido diastólico es de baja intensidad, se ausculta en el ápex con la campana a continuación del chasquido de apertura, y su duración se relaciona en forma directa con la gravedad; en ritmo sinusal suele acompañarse de refuerzo presistólico. En presencia de hipertensión pulmonar puede auscultarse además un soplo de Graham Steell, y en casos con calcificación valvular y cavidades derechas agrandadas puede haber silencio auscultatorio, lo que se denomina estenosis mitral áfona."
+  },
+  {
+    id: "Estenosis mitral electrocardiograma",
+    prompt: "¿Cuál es el conjunto electrocardiográfico más compatible con estenosis mitral evolucionada con repercusión auricular izquierda y progresión hemodinámica?",
+    options: [
+      "Onda P aumentada de duración, con doble pico o componente terminal negativo prominente en V1-V2; en fases avanzadas, fibrilación auricular, desviación del eje a la derecha y signos de sobrecarga derecha",
+      "Ondas Q anteroseptales patológicas, elevación persistente del ST y bloqueo AV completo como hallazgos característicos",
+      "QRS de bajo voltaje difuso, alternancia eléctrica y taquicardia sinusal como patrón definitorio",
+      "Ondas T picudas, PR corto y delta en derivaciones laterales como expresión habitual de la lesión mitral"
+    ],
+    answer: "Onda P aumentada de duración, con doble pico o componente terminal negativo prominente en V1-V2; en fases avanzadas, fibrilación auricular, desviación del eje a la derecha y signos de sobrecarga derecha",
+    why: "El electrocardiograma puede mostrar agrandamiento de la aurícula izquierda con ondas P aumentadas de duración, mayores de 0,10 s, con doble pico —onda P mitral— o morfología bifásica con componente negativo aumentado en duración y/o voltaje en V1 y V2. En estadios más avanzados es frecuente la aparición de fibrilación auricular y la desviación del eje eléctrico hacia la derecha, junto con signos de sobrecarga auricular y ventricular derecha."
+  },
+  {
+    id: "Estenosis mitral radiografía de tórax",
+    prompt: "¿Qué combinación radiográfica integra mejor los hallazgos estructurales y hemodinámicos esperables en la estenosis mitral con hipertensión pulmonar?",
+    options: [
+      "Cuarto arco en borde izquierdo y doble arco en borde derecho por crecimiento auricular izquierdo; prominencia del arco medio, rarefacción vascular periférica y signos de congestión pulmonar",
+      "Cardiomegalia global en bota, hiperflujo pulmonar difuso y muescas costales bilaterales como patrón típico",
+      "Aneurisma del cayado aórtico, derrame pleural izquierdo aislado y cavitación apical bilateral",
+      "Pulmones hiperclaros, diafragmas aplanados y aumento del espacio retroesternal como hallazgo dominante"
+    ],
+    answer: "Cuarto arco en borde izquierdo y doble arco en borde derecho por crecimiento auricular izquierdo; prominencia del arco medio, rarefacción vascular periférica y signos de congestión pulmonar",
+    why: "En la radiografía de tórax de frente puede observarse un cuarto arco sobre el borde izquierdo por crecimiento de la orejuela auricular izquierda, así como un doble arco sobre el borde derecho de la silueta cardíaca por crecimiento de la aurícula izquierda. Si existe hipertensión pulmonar puede verse procidencia del arco medio sobre el borde izquierdo por dilatación de la arteria pulmonar y disminución de la vascularización en la periferia de los campos pulmonares. También pueden aparecer signos de congestión pulmonar como redistribución del flujo hacia los vértices, líneas B de Kerley en las bases por edema intersticial, derrame intercisural, hilios congestivos e infiltrados alveolares. En el perfil puede observarse la impronta de la aurícula izquierda sobre el esófago cuando este se rellena con sustancia de contraste."
+  },
+  {
+    id: "Estenosis mitral ecocardiograma",
+    prompt: "¿Qué afirmación resume con mayor precisión el aporte del ecocardiograma en la evaluación integral de la estenosis mitral?",
+    options: [
+      "Demuestra agrandamiento auricular izquierdo, caracteriza engrosamiento, calcificación, apertura valvular y compromiso subvalvular; con Doppler estima gravedad, área valvular, gradientes y presión sistólica pulmonar, y el transesofágico detecta trombos auriculares",
+      "Su principal utilidad es cuantificar necrosis miocárdica y reemplaza por completo al ECG en la valoración del ritmo",
+      "Solo confirma la presencia de derrame pericárdico y no permite estimar gravedad ni repercusión hemodinámica",
+      "Se limita a valorar la fracción de eyección ventricular izquierda y no aporta información sobre el aparato subvalvular ni trombos"
+    ],
+    answer: "Demuestra agrandamiento auricular izquierdo, caracteriza engrosamiento, calcificación, apertura valvular y compromiso subvalvular; con Doppler estima gravedad, área valvular, gradientes y presión sistólica pulmonar, y el transesofágico detecta trombos auriculares",
+    why: "El ecocardiograma pone en evidencia el agrandamiento de la aurícula izquierda y permite estimar la gravedad de la agresión reumática a través del engrosamiento y la calcificación valvular, la disminución de la apertura valvular y el grado de compromiso del aparato subvalvular. Mediante el Doppler se puede estimar la gravedad de la lesión y calcular el área valvular, los gradientes transvalvulares y la presión sistólica pulmonar. El ecocardiograma transesofágico permite detectar trombos auriculares, especialmente en la orejuela, y evaluar con mayor precisión el grado de insuficiencia en pacientes con enfermedad mitral."
+  },
+  
 
 ];
