@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Semiología Respiratoria — Quiz</title>
+  <title>Semiología Cardiovascular — Quiz</title>
   <link rel="stylesheet" href="./quiz.css" />
 </head>
 <body>
@@ -13,7 +13,7 @@
         <h1>Semiología Respiratoria — Quiz</h1>
         <p>Elija la opción correcta.</p>
       </div>
-      <a href="index.html" class="btn secondary headerBack">← Respiratorio</a>
+      <a href="index.html" class="btn secondary headerBack">← Cardiovascular</a>
     </div>
   </header>
 
@@ -46,7 +46,7 @@
       <div class="controls centerControls">
         <button class="btn" id="retryMissedBtn" type="button">Rehacer incorrectas</button>
         <button class="btn secondary" id="restartQuizBtn" type="button">Reiniciar quiz</button>
-        <a href="index.html" class="btn secondary" style="text-decoration:none;">← Respiratorio</a>
+        <a href="index.html" class="btn secondary" style="text-decoration:none;">← Cardiovascular</a>
       </div>
     </section>
 
@@ -80,59 +80,6 @@
           <div id="questionHintControls" class="controls" style="display:none; margin-top:0; margin-bottom:12px;">
             <button class="btn secondary" id="questionHintBtn" type="button">Pista</button>
           </div>
-
-          <div id="questionHintWrap" class="semiologyWrap" style="display:none;">
-            <table class="semiologyTable">
-              <tr>
-                <th colspan="4" class="semiologyTitle">
-                  CUADRO 42-2-1. Diferencias semiológicas de los tres grandes síndromes respiratorios
-                </th>
-              </tr>
-              <tr>
-                <th class="semiologyBlank"></th>
-                <th class="semiologyColHead">Condensación con luz bronquial permeable (neumonía)</th>
-                <th class="semiologyColHead">Condensación con luz bronquial obstruida (atelectasia por obstrucción)</th>
-                <th class="semiologyColHead">Derrame pleural</th>
-              </tr>
-              <tr>
-                <td class="semiologySection">
-                  Inspección
-                  <span class="semiologySubrow">Patrón ventilatorio</span>
-                </td>
-                <td class="semiologyCell">Patrón restrictivo: taquipnea con hipopnea</td>
-                <td class="semiologyCell">Patrón restrictivo: taquipnea con hipopnea</td>
-                <td class="semiologyCell">Patrón restrictivo: taquipnea con hipopnea</td>
-              </tr>
-              <tr>
-                <td class="semiologySection">
-                  Palpación
-                  <span class="semiologySubrow">Vibraciones vocales</span>
-                </td>
-                <td class="semiologyCell">Aumentadas</td>
-                <td class="semiologyCell">Abolidas</td>
-                <td class="semiologyCell">Disminuidas o abolidas</td>
-              </tr>
-              <tr>
-                <td class="semiologySection">
-                  Percusión
-                  <span class="semiologySubrow">Pulmonar</span>
-                  <span class="semiologySubrow">De la columna</span>
-                </td>
-                <td class="semiologyCell">Mate<br>Sonora</td>
-                <td class="semiologyCell">Mate<br>Sonora</td>
-                <td class="semiologyCell">Mate<br>Mate</td>
-              </tr>
-              <tr>
-                <td class="semiologySection">Auscultación</td>
-                <td class="semiologyCell">Estertores crepitantes y soplo tubario o brónquico según la etapa</td>
-                <td class="semiologyCell">Silencio respiratorio</td>
-                <td class="semiologyCell">Abolición del murmullo vesicular<br>Soplo en “E” en el límite superior del derrame</td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="choices" id="choices"></div>
-
           <div id="matchQuestionWrap" style="display:none;">
             <div class="controls" style="margin-top:0; margin-bottom:12px;">
               <button class="btn secondary" id="checkMatchBtn" type="button">Verificar correlación</button>
